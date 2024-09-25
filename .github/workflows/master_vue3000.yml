@@ -67,5 +67,5 @@ jobs:
         with:
           app-name: 'vue3000'
           slot-name: 'Production'
-          package: .
+          package: dist/
           
