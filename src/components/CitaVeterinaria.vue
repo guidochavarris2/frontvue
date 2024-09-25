@@ -1,6 +1,6 @@
 <template>
   <div class="container mt-5">
-    <h2 class="text-center mb-4">Programar Cita Veterinaria</h2>
+    <h2 class="text-center mb-4">Programar Cita Veterinaria ...</h2>
     <form @submit.prevent="programarCita" class="shadow p-4 bg-light rounded">
       <div class="form-group">
         <label for="fechaCita">Fecha de Cita:</label>
