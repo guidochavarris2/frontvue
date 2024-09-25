@@ -14,7 +14,7 @@ export default {
 </script>
 
 <style>
-/* Estilos opcionales */
+/* Estilos opcionales222 */
 nav {
   display: flex;
   justify-content: space-around;
