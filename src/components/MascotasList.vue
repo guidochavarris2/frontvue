@@ -1,6 +1,7 @@
 <template>
   <div class="container mt-5">
-    <h1 class="text-center">Lista de Mascotas</h1><button @click="irADescripcion" class="btn btn-primary">Solicitar Servicio a Domicilio</button>
+    <h1 class="text-center">Lista de Mascotas</h1>
+    <button @click="irADescripcion" class="btn btn-primary">Solicitar Servicio a Domicilio</button>
     <form @submit.prevent="guardarMascota" class="mb-4">
       <div class="form-group">
         <label for="nombre">Nombre:</label>
@@ -37,7 +38,6 @@
     </ul>
     
   </div>
- 
 </template>
 
 <script>
@@ -65,12 +65,12 @@ export default {
   },
   methods: {
     irADescripcion() {
-        // Redirige a la vista de descripción pasando el userId
-        this.$router.push({ name: 'solicitarserviciocliente', params: { id: this.userId } });
-      },
+      // Redirige a la vista de descripción pasando el userId
+      this.$router.push({ name: 'solicitarserviciocliente', params: { id: this.userId } });
+    },
     async cargarMascotas() {
       // Cargar las mascotas asociadas al ID del dueño
-      const response = await fetch(`/api/mascotas?duenoId=${this.userId}`);
+      const response = await fetch(`https:java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas?duenoId=${this.userId}`);
       if (response.ok) {
         this.mascotas = await response.json();
       } else {
@@ -81,7 +81,7 @@ export default {
       this.mascota.duenio.id = this.userId;
 
       const method = this.editMode ? 'PUT' : 'POST';
-      const url = this.editMode ? `/api/mascotas/${this.mascota.id}` : '/api/mascotas/registrar';
+      const url = this.editMode ? `https://java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/${this.mascota.id}` : 'https:java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/registrar';
 
       const response = await fetch(url, {
         method: method,
@@ -121,7 +121,7 @@ export default {
     async eliminarMascota(id) {
       const confirmDelete = confirm("¿Estás seguro de que deseas eliminar esta mascota?");
       if (confirmDelete) {
-        const response = await fetch(`/api/mascotas/${id}`, {
+        const response = await fetch(`https://java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/${id}`, {
           method: 'DELETE',
         });
 
