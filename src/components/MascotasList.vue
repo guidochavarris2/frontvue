@@ -17,7 +17,7 @@
       </div>
       <div class="form-group">
         <label for="edad">Edad:</label>
-        <input type="number" v-model="mascota.edad" class="form-control" required />
+        <input type="number" v-model="mascota.edad" class="form-control" required min="1" />
       </div>
       <button type="submit" class="btn btn-primary w-100">
         {{ editMode ? 'Actualizar Mascota' : 'Registrar Mascota' }}
@@ -36,7 +36,6 @@
         </div>
       </li>
     </ul>
-    
   </div>
 </template>
 
@@ -69,36 +68,41 @@ export default {
       this.$router.push({ name: 'solicitarserviciocliente', params: { id: this.userId } });
     },
     async cargarMascotas() {
-      // Cargar las mascotas asociadas al ID del dueño
-      const response = await fetch(`https:java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas?duenoId=${this.userId}`);
-      if (response.ok) {
+      try {
+        const response = await fetch(`https://java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas?duenoId=${this.userId}`);
+        if (!response.ok) {
+          throw new Error(`Error al cargar las mascotas: ${response.statusText}`);
+        }
         this.mascotas = await response.json();
-      } else {
-        console.error("Error al cargar las mascotas:", response.statusText);
+      } catch (error) {
+        console.error(error.message);
       }
     },
     async guardarMascota() {
       this.mascota.duenio.id = this.userId;
-
       const method = this.editMode ? 'PUT' : 'POST';
-      const url = this.editMode ? `https://java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/${this.mascota.id}` : 'https:java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/registrar';
+      const url = this.editMode ? `https://java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/${this.mascota.id}` : 'https://java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/registrar';
 
-      const response = await fetch(url, {
-        method: method,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...this.mascota,
-          duenio: { id: this.mascota.duenio.id },
-        }),
-      });
+      try {
+        const response = await fetch(url, {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...this.mascota,
+            duenio: { id: this.mascota.duenio.id },
+          }),
+        });
 
-      if (response.ok) {
+        if (!response.ok) {
+          throw new Error(`Error al guardar la mascota: ${response.statusText}`);
+        }
+
         this.limpiarFormulario();
         this.cargarMascotas(); // Recarga la lista de mascotas
-      } else {
-        console.error("Error al guardar la mascota:", response.statusText);
+      } catch (error) {
+        console.error(error.message);
       }
     },
     limpiarFormulario() {
@@ -121,14 +125,18 @@ export default {
     async eliminarMascota(id) {
       const confirmDelete = confirm("¿Estás seguro de que deseas eliminar esta mascota?");
       if (confirmDelete) {
-        const response = await fetch(`https://java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/${id}`, {
-          method: 'DELETE',
-        });
+        try {
+          const response = await fetch(`https://java3000-g8cthucjhvgad2c3.canadacentral-01.azurewebsites.net/api/mascotas/${id}`, {
+            method: 'DELETE',
+          });
 
-        if (response.ok) {
+          if (!response.ok) {
+            throw new Error(`Error al eliminar la mascota: ${response.statusText}`);
+          }
+
           this.cargarMascotas(); // Recargar la lista de mascotas
-        } else {
-          console.error("Error al eliminar la mascota:", response.statusText);
+        } catch (error) {
+          console.error(error.message);
         }
       }
     },
